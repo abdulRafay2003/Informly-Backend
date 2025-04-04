@@ -18,7 +18,7 @@ const getCoordinates = async (req, res) => {
 
 const sendSms = async (req, res) => {
   let data;
-  const emergencyNumbers = ["+923212163426"];
+  const emergencyNumbers = ["+92 336 3766006"];
   const message = " Accident Alert!";
 
   data = { message, ...req.body };
