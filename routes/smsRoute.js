@@ -11,4 +11,4 @@ router.post("/send", sendSms);
 router.get("/coordinates", getCoordinates);
 
 module.exports = router;
- 
+  
