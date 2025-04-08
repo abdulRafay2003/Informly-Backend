@@ -1,5 +1,6 @@
 const SmsMessage = require("../model/smsMessage");
-const { sendSmsTwilio } = require("../services/smsService");
+const { sendSmsTwilio, generateAgoraToken } = require("../services/smsService");
+const agoraConfig = require("../config/agoraConfig");
 
 const getCoordinates = async (req, res) => {
   try {
@@ -45,4 +46,21 @@ const sendSms = async (req, res) => {
   }
 };
 
-module.exports = { sendSms, getCoordinates };
+const getAgoraToken = async (req, res) => {
+  // const channelName = req.query.channelName;
+  // const uid = parseInt(req.query.uid); // UID should be a number
+  try {
+    const token = generateAgoraToken();
+    res.json({
+      token,
+      channelName: agoraConfig.agora.channelName,
+      uid: Number(agoraConfig.agora.uid),
+      app_id: agoraConfig.agora.appId,
+      stream_url: `https://informly-web-app.vercel.app/watch?token=${token}`,
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+
+module.exports = { sendSms, getCoordinates, getAgoraToken };
