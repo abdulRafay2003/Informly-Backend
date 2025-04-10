@@ -3,6 +3,7 @@ const twilio = require("twilio");
 const smsConfig = require("../config/smsConfig");
 const agoraConfig = require("../config/agoraConfig");
 const { RtcTokenBuilder, RtcRole } = require("agora-access-token");
+const AgoraToken = require("../model/AgoraToken");
 
 const sendSmsTwilio = async (to, data) => {
   console.log(to, data);
@@ -23,6 +24,7 @@ const sendSmsTwilio = async (to, data) => {
 };
 
 function generateAgoraToken() {
+  // const generateAgoraToken = async () => {
   // if (!CHANNEL_NAME || !UID) {
   //   throw new Error("channelName and uid are required");
   // }
@@ -43,6 +45,14 @@ function generateAgoraToken() {
     agoraConfig.agora.uid,
     role,
     privilegeExpiredTs
+  );
+  const expiresAt = new Date(privilegeExpiredTs * 1000);
+
+  // Replace or insert token record
+  AgoraToken.findOneAndUpdate(
+    { uid: agoraConfig.agora.uid },
+    { token, expiresAt },
+    { upsert: true, new: true }
   );
 
   return token;
